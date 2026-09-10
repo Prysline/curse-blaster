@@ -40,7 +40,7 @@ main{
   cursor:crosshair;
 }
 
-.chaos-capture-layer.is-on{
+.page[data-page="blast"]:has(.chaos-toggle.is-on) .chaos-capture-layer{
   pointer-events:auto;
   background:rgba(0,0,0,.16);
 }
