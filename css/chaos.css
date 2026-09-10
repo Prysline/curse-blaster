@@ -12,6 +12,10 @@ main{
   min-height:0;
 }
 
+body.chaos-active{
+  overflow:hidden;
+}
+
 .page[data-page="blast"]{
   user-select:none;
   -webkit-user-select:none;
@@ -31,29 +35,21 @@ main{
   position:relative;
   z-index:45;
   display:grid;
-  gap:4px;
   justify-items:center;
-  margin-top:14px;
+  margin-top:10px;
   pointer-events:none;
 }
 
-.tap-target-label{
-  font-size:11px;
-  font-weight:850;
-  letter-spacing:.14em;
-  color:var(--muted);
-}
-
 .tap-target-name{
-  max-width:min(78vw,360px);
-  font-size:clamp(17px,2.4vw,24px);
-  line-height:1.18;
+  max-width:min(82vw,420px);
+  font-size:clamp(40px,5vw,56px);
+  line-height:1.02;
   font-weight:950;
-  letter-spacing:-.025em;
+  letter-spacing:-.045em;
   color:var(--text);
   text-align:center;
   overflow-wrap:anywhere;
-  text-shadow:0 1px 8px color-mix(in srgb,var(--bg) 80%,transparent);
+  text-shadow:0 2px 14px color-mix(in srgb,var(--bg) 82%,transparent);
 }
 
 .chaos-capture-layer{
@@ -75,6 +71,7 @@ main{
 
 .chaos-capture-layer.is-on{
   pointer-events:auto;
+  touch-action:none;
   background:rgba(0,0,0,.16);
 }
 
@@ -106,12 +103,12 @@ main{
   }
 
   .tap-target{
-    margin-top:12px;
+    margin-top:10px;
   }
 
   .tap-target-name{
-    max-width:82vw;
-    font-size:clamp(18px,5vw,23px);
+    max-width:84vw;
+    font-size:clamp(38px,11vw,48px);
   }
 }
 
