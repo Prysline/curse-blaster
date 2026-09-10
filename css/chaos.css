@@ -23,6 +23,39 @@ main{
   -webkit-user-select:text;
 }
 
+.blaster-inner{
+  z-index:auto;
+}
+
+.tap-target{
+  position:relative;
+  z-index:45;
+  display:grid;
+  gap:4px;
+  justify-items:center;
+  margin-top:14px;
+  pointer-events:none;
+}
+
+.tap-target-label{
+  font-size:11px;
+  font-weight:850;
+  letter-spacing:.14em;
+  color:var(--muted);
+}
+
+.tap-target-name{
+  max-width:min(78vw,360px);
+  font-size:clamp(17px,2.4vw,24px);
+  line-height:1.18;
+  font-weight:950;
+  letter-spacing:-.025em;
+  color:var(--text);
+  text-align:center;
+  overflow-wrap:anywhere;
+  text-shadow:0 1px 8px color-mix(in srgb,var(--bg) 80%,transparent);
+}
+
 .chaos-capture-layer{
   position:fixed;
   top:var(--header-h);
@@ -40,7 +73,7 @@ main{
   cursor:crosshair;
 }
 
-.page[data-page="blast"]:has(.chaos-toggle.is-on) .chaos-capture-layer{
+.chaos-capture-layer.is-on{
   pointer-events:auto;
   background:rgba(0,0,0,.16);
 }
@@ -52,10 +85,11 @@ main{
   left:0;
   width:auto;
   height:auto;
+  z-index:47;
 }
 
 .chaos-toggle{
-  z-index:46;
+  z-index:48;
 }
 
 .nav{
@@ -69,6 +103,15 @@ main{
 @media (max-width:760px){
   :root{
     --header-h:58px;
+  }
+
+  .tap-target{
+    margin-top:12px;
+  }
+
+  .tap-target-name{
+    max-width:82vw;
+    font-size:clamp(18px,5vw,23px);
   }
 }
 
