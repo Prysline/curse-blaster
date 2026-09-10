@@ -59,6 +59,20 @@
             <input class="field" id="phraseInput" maxlength="100" placeholder="例如：到底是在供三小" />
             <button class="btn" id="addPhraseBtn">加入</button>
           </div>
+
+          <div class="library-tools">
+            <div class="library-actions">
+              <button class="btn secondary" id="exportPhrasesBtn">匯出咒罵庫</button>
+              <button class="btn secondary" id="importPhrasesBtn">匯入咒罵庫</button>
+              <input id="phraseFileInput" type="file" accept="application/json,.json" hidden />
+            </div>
+            <label class="overwrite-option">
+              <input id="overwriteImport" type="checkbox" />
+              <span>匯入時完全覆蓋目前咒罵庫</span>
+            </label>
+            <p class="hint">未勾選時會合併匯入並依咒罵文字去重；勾選後會以匯入檔完整取代目前咒罵庫。</p>
+          </div>
+
           <div class="phrase-list" id="phraseList"></div>
           <p class="hint">至少需要啟用一個字眼。所有資料只儲存在目前這個瀏覽器。</p>
         </div>
@@ -114,7 +128,7 @@
         </div>
 
         <div class="footer-actions">
-          <button class="btn secondary" id="exportBtn">匯出 JSON</button>
+          <button class="btn secondary" id="exportBtn">匯出統計 JSON</button>
           <button class="btn danger" id="clearStatsBtn">清除全部統計</button>
         </div>
       </div>
