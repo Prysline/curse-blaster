@@ -1,3 +1,5 @@
+![Curse Blaster social preview](./assets/social-preview.svg)
+
 # curse-blaster
 
 A tiny rage-clicking curse tracker.
@@ -29,8 +31,12 @@ A tiny rage-clicking curse tracker.
 ```text
 curse-blaster/
 ├─ index.html
+├─ assets/
+│  ├─ favicon.svg
+│  └─ social-preview.svg
 ├─ css/
-│  └─ style.css
+│  ├─ style.css
+│  └─ chaos.css
 ├─ js/
 │  ├─ app.js
 │  ├─ storage.js
@@ -116,3 +122,5 @@ python -m http.server 8000
 ## License
 
 See [LICENSE](./LICENSE).
+
+<a href="https://www.buymeacoffee.com/prysline"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=prysline&button_colour=fe7958&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=FFDD00" /></a>
