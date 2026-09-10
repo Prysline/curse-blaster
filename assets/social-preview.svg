@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+  <defs>
+    <radialGradient id="g1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(170 140) rotate(35) scale(450 340)"><stop stop-color="#5a3a12"/><stop offset="1" stop-color="#11100f" stop-opacity="0"/></radialGradient>
+    <radialGradient id="g2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1050 500) rotate(-145) scale(520 360)"><stop stop-color="#6d261d"/><stop offset="1" stop-color="#11100f" stop-opacity="0"/></radialGradient>
+    <pattern id="dots" width="18" height="18" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r="1" fill="#f0b645" opacity=".22"/></pattern>
+  </defs>
+  <rect width="1280" height="640" fill="#11100f"/>
+  <rect width="1280" height="640" fill="url(#g1)"/>
+  <rect width="1280" height="640" fill="url(#g2)"/>
+  <rect width="1280" height="640" fill="url(#dots)" opacity=".55"/>
+  <g transform="translate(78 118)">
+    <rect width="96" height="96" rx="24" fill="#fffaf2"/>
+    <text x="48" y="68" text-anchor="middle" font-family="system-ui,'Noto Sans TC','Microsoft JhengHei',sans-serif" font-size="58" font-weight="900" fill="#151311">幹</text>
+    <text x="0" y="165" font-family="system-ui,'Noto Sans TC','Microsoft JhengHei',sans-serif" font-size="60" font-weight="900" fill="#fffaf2">幹話發射器</text>
+    <text x="4" y="208" font-family="system-ui,sans-serif" font-size="22" font-weight="700" letter-spacing="8" fill="#b8afa6">CURSE BLASTER</text>
+    <text x="4" y="280" font-family="system-ui,sans-serif" font-size="24" fill="#cfc6bd">A tiny rage-clicking curse tracker.</text>
+  </g>
+  <g transform="translate(590 88)">
+    <rect width="610" height="470" rx="34" fill="#1b1917" stroke="#3a332d"/>
+    <rect width="610" height="470" rx="34" fill="url(#dots)" opacity=".7"/>
+    <text x="305" y="138" text-anchor="middle" font-family="system-ui,'Noto Sans TC','Microsoft JhengHei',sans-serif" font-size="38" font-weight="900" fill="#fffaf2">點一下。</text>
+    <text x="305" y="180" text-anchor="middle" font-family="system-ui,'Noto Sans TC','Microsoft JhengHei',sans-serif" font-size="20" fill="#aaa096">你知道你想罵</text>
+    <text x="305" y="265" text-anchor="middle" font-family="system-ui,'Noto Sans TC','Microsoft JhengHei',sans-serif" font-size="50" font-weight="900" fill="#fffaf2">今天到底在搞什麼</text>
+    <rect x="214" y="310" width="182" height="62" rx="31" fill="#25211e"/>
+    <text x="305" y="352" text-anchor="middle" font-family="system-ui,'Noto Sans TC','Microsoft JhengHei',sans-serif" font-size="22" fill="#fffaf2">今天已罵 <tspan font-size="34" font-weight="900">510</tspan> 下</text>
+    <text x="92" y="105" transform="rotate(-10 92 105)" font-family="system-ui,'Noto Sans TC','Microsoft JhengHei',sans-serif" font-size="56" font-weight="900" fill="#ff624a">操你媽</text>
+    <text x="500" y="110" transform="rotate(7 500 110)" font-family="system-ui,'Noto Sans TC','Microsoft JhengHei',sans-serif" font-size="66" font-weight="900" fill="#ff624a">幹</text>
+    <text x="355" y="438" transform="rotate(-8 355 438)" font-family="system-ui,'Noto Sans TC','Microsoft JhengHei',sans-serif" font-size="42" font-weight="900" fill="#ff624a">到底是在供三小</text>
+  </g>
+</svg>
