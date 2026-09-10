@@ -10,8 +10,8 @@ export function createDefaultState() {
     currentTopic: '今天到底在搞什麼',
     phrases: [
       { id: createId('p1'), text: '操你媽', enabled: true },
-      { id: createId('p2'), text: '到底是在供三小', enabled: false },
-      { id: createId('p3'), text: '幹', enabled: false }
+      { id: createId('p2'), text: '幹', enabled: false },
+      { id: createId('p3'), text: '到底是在供三小', enabled: false }
     ],
     dailyStats: {}
   };
