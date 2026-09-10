@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#171717" />
+  <meta name="description" content="A tiny rage-clicking curse tracker." />
+  <title>幹話發射器</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><div class="brand-mark">幹</div><span>幹話發射器</span></div>
+    <button class="theme-btn" id="themeBtn" aria-label="切換日夜間模式" title="切換日夜間模式">☾</button>
+  </header>
+
+  <main>
+    <section class="page active" data-page="blast">
+      <div class="wrap">
+        <div class="hero">
+          <article class="card">
+            <div class="eyebrow">CURRENT TARGET</div>
+            <h1 id="topicDisplay">今天到底在搞什麼</h1>
+            <p class="sub">幫你把每一下都記得清清楚楚。點越多，統計越誠實。</p>
+            <div class="topic-box">
+              <input class="field" id="topicInput" maxlength="80" placeholder="輸入目前咒罵對象／事件主題" />
+              <button class="pill accent" id="saveTopicBtn">套用主題</button>
+            </div>
+            <div class="mini-stat">
+              <div><span>本次工作階段</span><b id="sessionCount">0</b></div>
+              <div><span>目前啟用字眼</span><b id="activePhraseCount">0</b></div>
+            </div>
+          </article>
+
+          <article class="card blaster" id="blaster" aria-label="點擊這裡發射咒罵">
+            <div class="blaster-inner">
+              <div class="tap-title">點一下。</div>
+              <div class="tap-note">你知道你想罵。</div>
+              <div class="counter">今天已罵 <b id="todayCount">0</b> 下</div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" data-page="phrases">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>咒罵字眼</h2>
+            <p>勾一個就固定出現；勾多個時，每次點擊會從啟用項目中隨機抽一個。</p>
+          </div>
+          <button class="pill" id="toggleAllBtn">全選 / 全不選</button>
+        </div>
+
+        <div class="card">
+          <div class="add-row">
+            <input class="field" id="phraseInput" maxlength="100" placeholder="例如：到底是在供三小" />
+            <button class="btn" id="addPhraseBtn">加入</button>
+          </div>
+          <div class="phrase-list" id="phraseList"></div>
+          <p class="hint">至少需要啟用一個字眼。所有資料只儲存在目前這個瀏覽器。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" data-page="stats">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>咒罵統計</h2>
+            <p>依時間、主題與實際跳出的字眼統計。</p>
+          </div>
+          <div class="range-tabs" id="rangeTabs">
+            <button class="range-btn active" data-range="7">7 天</button>
+            <button class="range-btn" data-range="30">30 天</button>
+            <button class="range-btn" data-range="all">全部</button>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card"><span>總點擊</span><b id="statTotal">0</b></div>
+          <div class="stat-card"><span>今天</span><b id="statToday">0</b></div>
+          <div class="stat-card"><span>最常罵</span><b id="statTopPhrase">—</b></div>
+          <div class="stat-card"><span>最常被罵主題</span><b id="statTopTopic">—</b></div>
+        </div>
+
+        <div class="stats-layout">
+          <div class="chart-card">
+            <div class="chart-title"><h3>每日點擊</h3><span class="eyebrow" id="chartLabel">LAST 7 DAYS</span></div>
+            <canvas id="trendChart" width="900" height="280"></canvas>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-title"><h3>一天裡最容易爆氣的時間</h3></div>
+            <div class="hours" id="hoursGrid"></div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-title"><h3>依咒罵字眼</h3></div>
+            <div class="bars" id="phraseBars"></div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-title"><h3>依主題</h3></div>
+            <div class="bars" id="topicBars"></div>
+          </div>
+
+          <div class="chart-card" style="grid-column:1/-1">
+            <div class="chart-title"><h3>每日／主題戰報</h3></div>
+            <div class="recent" id="recentList"></div>
+          </div>
+        </div>
+
+        <div class="footer-actions">
+          <button class="btn secondary" id="exportBtn">匯出 JSON</button>
+          <button class="btn danger" id="clearStatsBtn">清除全部統計</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="nav" aria-label="主選單">
+    <button class="active" data-nav="blast">發洩</button>
+    <button data-nav="phrases">咒罵庫</button>
+    <button data-nav="stats">統計</button>
+  </nav>
+</div>
+<script type="module" src="./js/app.js"></script>
+</body>
+</html>
