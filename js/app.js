@@ -52,6 +52,7 @@ function activePhrases() {
 
 function renderHome() {
   $('#topicDisplay').textContent = state.currentTopic;
+  $('#blasterTopicDisplay').textContent = state.currentTopic;
   $('#topicInput').value = state.currentTopic;
   $('#sessionCount').textContent = sessionCount;
   $('#activePhraseCount').textContent = activePhrases().length;
@@ -238,22 +239,15 @@ function blast(e) {
 
 function renderChaosMode() {
   const btn = $('#chaosToggle');
+  const capture = $('#chaosCaptureLayer');
   btn.classList.toggle('is-on', chaosMode);
+  capture.classList.toggle('is-on', chaosMode);
   btn.setAttribute('aria-pressed', chaosMode ? 'true' : 'false');
   $('#chaosState').textContent = chaosMode ? 'ON' : 'OFF';
 }
 
-function isInteractiveTarget(target) {
-  return !!target.closest('button, input, select, textarea, label, a, [role="button"], .nav, .blaster');
-}
-
 function handleChaosPointer(e) {
   if (!chaosMode) return;
-
-  const blastPage = $('.page[data-page="blast"]');
-  if (!blastPage.classList.contains('active')) return;
-  if (isInteractiveTarget(e.target)) return;
-
   fireCurseAt(e.clientX, e.clientY, $('#pageBurstLayer'));
 }
 
@@ -377,7 +371,7 @@ $('#chaosToggle').addEventListener('click', () => {
   chaosMode = !chaosMode;
   renderChaosMode();
 });
-$('.page[data-page="blast"]').addEventListener('pointerdown', handleChaosPointer);
+$('#chaosCaptureLayer').addEventListener('pointerdown', handleChaosPointer);
 
 $('#addPhraseBtn').addEventListener('click', addPhrase);
 $('#phraseInput').addEventListener('keydown', e => {
