@@ -14,6 +14,7 @@ import {
 let state = loadState();
 let sessionCount = 0;
 let statRange = '7';
+let chaosMode = false;
 
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
@@ -132,10 +133,45 @@ function addPhrase() {
   input.focus();
 }
 
-function showBurst(text, e) {
+function pickPhrase() {
+  const phrases = activePhrases();
+  if (!phrases.length) return null;
+  return phrases[Math.floor(Math.random() * phrases.length)];
+}
+
+function showBurst(text, x, y, area = $('#blaster')) {
+  const el = document.createElement('div');
+  el.className = 'burst';
+  el.textContent = text;
+  el.style.left = `${x}px`;
+  el.style.top = `${y}px`;
+  el.style.fontSize = `clamp(34px, ${Math.min(11, 5 + text.length * .55)}vw, 82px)`;
+  el.style.setProperty('--rot', `${(Math.random() * 12 - 6).toFixed(1)}deg`);
+  area.appendChild(el);
+  setTimeout(() => el.remove(), 1000);
+}
+
+function fireCurseAt(x, y, area = $('#blaster')) {
+  const picked = pickPhrase();
+
+  if (!picked) {
+    go('phrases');
+    requestAnimationFrame(() => $('#phraseInput').focus());
+    return;
+  }
+
+  const topic = state.currentTopic || '未命名對象';
+  recordClick(state, topic, picked.text);
+  saveState(state);
+
+  sessionCount += 1;
+  renderHome();
+  showBurst(picked.text, x, y, area);
+}
+
+function blast(e) {
   const area = $('#blaster');
   const rect = area.getBoundingClientRect();
-
   let x = e.clientX - rect.left;
   let y = e.clientY - rect.top;
 
@@ -146,37 +182,28 @@ function showBurst(text, e) {
 
   x = Math.max(70, Math.min(rect.width - 70, x));
   y = Math.max(70, Math.min(rect.height - 70, y));
-
-  const el = document.createElement('div');
-  el.className = 'burst';
-  el.textContent = text;
-  el.style.left = `${x}px`;
-  el.style.top = `${y}px`;
-  el.style.fontSize = `clamp(34px, ${Math.min(11, 5 + text.length * .55)}vw, 82px)`;
-  el.style.setProperty('--rot', `${(Math.random() * 12 - 6).toFixed(1)}deg`);
-
-  area.appendChild(el);
-  setTimeout(() => el.remove(), 1000);
+  fireCurseAt(x, y, area);
 }
 
-function blast(e) {
-  const phrases = activePhrases();
+function renderChaosMode() {
+  const btn = $('#chaosToggle');
+  btn.classList.toggle('is-on', chaosMode);
+  btn.setAttribute('aria-pressed', chaosMode ? 'true' : 'false');
+  $('#chaosState').textContent = chaosMode ? 'ON' : 'OFF';
+}
 
-  if (!phrases.length) {
-    go('phrases');
-    requestAnimationFrame(() => $('#phraseInput').focus());
-    return;
-  }
+function isInteractiveTarget(target) {
+  return !!target.closest('button, input, select, textarea, label, a, [role="button"], .nav, .blaster');
+}
 
-  const picked = phrases[Math.floor(Math.random() * phrases.length)];
-  const topic = state.currentTopic || '未命名對象';
+function handleChaosPointer(e) {
+  if (!chaosMode) return;
 
-  recordClick(state, topic, picked.text);
-  saveState(state);
+  const blastPage = $('.page[data-page="blast"]');
+  if (!blastPage.classList.contains('active')) return;
+  if (isInteractiveTarget(e.target)) return;
 
-  sessionCount += 1;
-  renderHome();
-  showBurst(picked.text, e);
+  fireCurseAt(e.clientX, e.clientY, $('#pageBurstLayer'));
 }
 
 function exportStats() {
@@ -295,6 +322,12 @@ $('#topicInput').addEventListener('keydown', e => {
 });
 
 $('#blaster').addEventListener('pointerdown', blast);
+$('#chaosToggle').addEventListener('click', () => {
+  chaosMode = !chaosMode;
+  renderChaosMode();
+});
+$('.page[data-page="blast"]').addEventListener('pointerdown', handleChaosPointer);
+
 $('#addPhraseBtn').addEventListener('click', addPhrase);
 $('#phraseInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') {
@@ -367,3 +400,4 @@ applyTheme();
 renderHome();
 renderPhrases();
 renderStats();
+renderChaosMode();
