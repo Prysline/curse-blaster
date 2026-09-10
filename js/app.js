@@ -139,13 +139,64 @@ function pickPhrase() {
   return phrases[Math.floor(Math.random() * phrases.length)];
 }
 
+function getBurstMetrics(text, area) {
+  const length = [...text].length;
+  const rect = area.getBoundingClientRect();
+  const longSide = Math.max(rect.width, rect.height);
+  const availableWidth = Math.max(160, Math.min(rect.width * 0.86, 460));
+
+  let ratio;
+  let min;
+  let max;
+
+  if (length <= 3) {
+    ratio = 0.18;
+    min = 64;
+    max = 86;
+  } else if (length <= 5) {
+    ratio = 0.15;
+    min = 56;
+    max = 76;
+  } else if (length <= 8) {
+    ratio = 0.135;
+    min = 50;
+    max = 70;
+  } else if (length <= 12) {
+    ratio = 0.115;
+    min = 44;
+    max = 62;
+  } else {
+    ratio = 0.10;
+    min = 38;
+    max = 54;
+  }
+
+  let fontSize = Math.max(min, Math.min(max, longSide * ratio));
+  const singleLine = length <= 5;
+
+  if (singleLine) {
+    const fitSize = availableWidth * 0.96 / Math.max(length, 1);
+    fontSize = Math.min(fontSize, fitSize);
+    fontSize = Math.max(Math.min(min, 52), fontSize);
+  }
+
+  return {
+    fontSize: Math.round(fontSize),
+    maxWidth: Math.round(availableWidth),
+    singleLine
+  };
+}
+
 function showBurst(text, x, y, area = $('#blaster')) {
+  const metrics = getBurstMetrics(text, area);
   const el = document.createElement('div');
   el.className = 'burst';
   el.textContent = text;
   el.style.left = `${x}px`;
   el.style.top = `${y}px`;
-  el.style.fontSize = `clamp(34px, ${Math.min(11, 5 + text.length * .55)}vw, 82px)`;
+  el.style.fontSize = `${metrics.fontSize}px`;
+  el.style.maxWidth = `${metrics.maxWidth}px`;
+  el.style.whiteSpace = metrics.singleLine ? 'nowrap' : 'normal';
   el.style.setProperty('--rot', `${(Math.random() * 12 - 6).toFixed(1)}deg`);
   area.appendChild(el);
   setTimeout(() => el.remove(), 1000);
