@@ -63,6 +63,11 @@ body.chaos-active{
   text-shadow:0 2px 14px color-mix(in srgb,var(--bg) 82%,transparent);
 }
 
+/* Normal blaster bursts must stay above the target name too. */
+.blaster > .burst{
+  z-index:46;
+}
+
 .chaos-capture-layer{
   position:fixed;
   top:var(--header-h);
