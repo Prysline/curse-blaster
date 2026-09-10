@@ -1,0 +1,79 @@
+:root{
+  --header-h:64px;
+}
+
+.app{
+  display:flex;
+  flex-direction:column;
+}
+
+main{
+  flex:1 0 auto;
+  min-height:0;
+}
+
+.page[data-page="blast"]{
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-touch-callout:none;
+}
+
+.page[data-page="blast"] input{
+  user-select:text;
+  -webkit-user-select:text;
+}
+
+.chaos-capture-layer{
+  position:fixed;
+  top:var(--header-h);
+  right:0;
+  bottom:calc(var(--nav-h) + 20px + env(safe-area-inset-bottom));
+  left:0;
+  z-index:44;
+  pointer-events:none;
+  touch-action:manipulation;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-touch-callout:none;
+  background:rgba(0,0,0,0);
+  transition:background .16s ease;
+  cursor:crosshair;
+}
+
+.chaos-capture-layer.is-on{
+  pointer-events:auto;
+  background:rgba(0,0,0,.16);
+}
+
+.page-burst-layer{
+  top:var(--header-h);
+  right:0;
+  bottom:calc(var(--nav-h) + 20px + env(safe-area-inset-bottom));
+  left:0;
+  width:auto;
+  height:auto;
+}
+
+.chaos-toggle{
+  z-index:46;
+}
+
+.nav{
+  z-index:50;
+}
+
+.topbar{
+  z-index:60;
+}
+
+@media (max-width:760px){
+  :root{
+    --header-h:58px;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .chaos-capture-layer{
+    transition:none;
+  }
+}
