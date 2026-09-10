@@ -180,50 +180,79 @@ function getBurstMetrics(text, area) {
   };
 }
 
-function getBurstLines(text) {
-  const chars = [...text];
-  const length = chars.length;
+function getBurstLayout(text, metrics) {
+  const length = [...text].length;
+  const roll = Math.random();
 
-  let wrapChance = 0;
-  if (length >= 4 && length <= 5) wrapChance = 0.15;
-  else if (length <= 8) wrapChance = 0.35;
-  else if (length >= 9) wrapChance = 0.55;
+  // 15%: keep the whole phrase on one line when it can stay legible.
+  if (roll < 0.15) {
+    const estimatedWidth = metrics.fontSize * Math.max(length * 0.96, 1);
+    const fitScale = Math.min(1, metrics.maxWidth / estimatedWidth);
 
-  if (!wrapChance || Math.random() >= wrapChance) return [text];
-
-  const center = length / 2;
-  const candidates = [];
-
-  for (let i = 2; i <= length - 2; i += 1) {
-    candidates.push({
-      index: i,
-      distance: Math.abs(i - center) + Math.random() * 0.8
-    });
+    if (fitScale >= 0.55) {
+      return {
+        mode: 'nowrap',
+        fontSize: Math.round(metrics.fontSize * fitScale),
+        width: null
+      };
+    }
   }
 
-  if (!candidates.length) return [text];
+  // Another 15% for 1–3 characters: true upright vertical writing.
+  if (length <= 3 && roll < 0.30) {
+    return {
+      mode: 'vertical',
+      fontSize: metrics.fontSize,
+      width: Math.round(metrics.fontSize * 1.18)
+    };
+  }
 
-  candidates.sort((a, b) => a.distance - b.distance);
-  const splitAt = candidates[0].index;
-  return [chars.slice(0, splitAt).join(''), chars.slice(splitAt).join('')];
+  // Otherwise choose one of three widths and let the browser wrap naturally.
+  const widthRatios = [0.36, 0.52, 0.72];
+  const ratio = widthRatios[Math.floor(Math.random() * widthRatios.length)];
+  const targetChars = Math.max(1, length * ratio);
+  const width = Math.min(
+    metrics.maxWidth,
+    Math.max(metrics.fontSize * 1.05, metrics.fontSize * targetChars)
+  );
+
+  return {
+    mode: 'wrap',
+    fontSize: metrics.fontSize,
+    width: Math.round(width)
+  };
 }
 
 function showBurst(text, x, y, area = $('#blaster')) {
   const metrics = getBurstMetrics(text, area);
-  const lines = getBurstLines(text);
+  const layout = getBurstLayout(text, metrics);
   const el = document.createElement('div');
   el.className = 'burst';
+  el.textContent = text;
   el.style.left = `${x}px`;
   el.style.top = `${y}px`;
-  el.style.fontSize = `${metrics.fontSize}px`;
-  el.style.maxWidth = `${metrics.maxWidth}px`;
-  el.style.whiteSpace = 'nowrap';
+  el.style.fontSize = `${layout.fontSize}px`;
   el.style.setProperty('--rot', `${(Math.random() * 12 - 6).toFixed(1)}deg`);
 
-  lines.forEach((line, index) => {
-    if (index) el.appendChild(document.createElement('br'));
-    el.appendChild(document.createTextNode(line));
-  });
+  if (layout.mode === 'vertical') {
+    el.style.width = `${layout.width}px`;
+    el.style.maxWidth = `${layout.width}px`;
+    el.style.writingMode = 'vertical-rl';
+    el.style.textOrientation = 'upright';
+    el.style.whiteSpace = 'nowrap';
+    el.style.letterSpacing = '.08em';
+    el.style.lineHeight = '1';
+  } else if (layout.mode === 'nowrap') {
+    el.style.maxWidth = 'none';
+    el.style.whiteSpace = 'nowrap';
+  } else {
+    el.style.width = `${layout.width}px`;
+    el.style.maxWidth = `${layout.width}px`;
+    el.style.whiteSpace = 'normal';
+    el.style.wordBreak = 'break-all';
+    el.style.overflowWrap = 'anywhere';
+    el.style.textAlign = 'center';
+  }
 
   area.appendChild(el);
   setTimeout(() => el.remove(), 1000);
