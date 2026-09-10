@@ -31,12 +31,23 @@ body.chaos-active{
   z-index:auto;
 }
 
+.tap-title{
+  font-size:clamp(28px,3vw,36px);
+  line-height:1.05;
+  letter-spacing:-.035em;
+  opacity:.9;
+}
+
+.tap-note{
+  margin-top:8px;
+}
+
 .tap-target{
   position:relative;
   z-index:45;
   display:grid;
   justify-items:center;
-  margin-top:10px;
+  margin-top:12px;
   pointer-events:none;
 }
 
@@ -102,8 +113,12 @@ body.chaos-active{
     --header-h:58px;
   }
 
+  .tap-title{
+    font-size:clamp(28px,8vw,34px);
+  }
+
   .tap-target{
-    margin-top:10px;
+    margin-top:12px;
   }
 
   .tap-target-name{
