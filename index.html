@@ -1,11 +1,22 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#171717" />
   <meta name="description" content="A tiny rage-clicking curse tracker." />
   <title>幹話發射器</title>
+  <script>
+    (() => {
+      let theme = 'dark';
+      try {
+        const saved = JSON.parse(localStorage.getItem('curse-blaster-v2'));
+        if (saved?.theme === 'light') theme = 'light';
+      } catch {}
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.style.backgroundColor = theme === 'dark' ? '#11100f' : '#f5f1ea';
+    })();
+  </script>
   <link rel="stylesheet" href="./css/style.css" />
 </head>
 <body>
