@@ -172,33 +172,59 @@ function getBurstMetrics(text, area) {
     max = 54;
   }
 
-  let fontSize = Math.max(min, Math.min(max, longSide * ratio));
-  const singleLine = length <= 5;
-
-  if (singleLine) {
-    const fitSize = availableWidth * 0.96 / Math.max(length, 1);
-    fontSize = Math.min(fontSize, fitSize);
-    fontSize = Math.max(Math.min(min, 52), fontSize);
-  }
+  const fontSize = Math.max(min, Math.min(max, longSide * ratio));
 
   return {
     fontSize: Math.round(fontSize),
-    maxWidth: Math.round(availableWidth),
-    singleLine
+    maxWidth: Math.round(availableWidth)
   };
+}
+
+function getBurstLines(text) {
+  const chars = [...text];
+  const length = chars.length;
+
+  let wrapChance = 0;
+  if (length >= 4 && length <= 5) wrapChance = 0.15;
+  else if (length <= 8) wrapChance = 0.35;
+  else if (length >= 9) wrapChance = 0.55;
+
+  if (!wrapChance || Math.random() >= wrapChance) return [text];
+
+  const center = length / 2;
+  const candidates = [];
+
+  for (let i = 2; i <= length - 2; i += 1) {
+    candidates.push({
+      index: i,
+      distance: Math.abs(i - center) + Math.random() * 0.8
+    });
+  }
+
+  if (!candidates.length) return [text];
+
+  candidates.sort((a, b) => a.distance - b.distance);
+  const splitAt = candidates[0].index;
+  return [chars.slice(0, splitAt).join(''), chars.slice(splitAt).join('')];
 }
 
 function showBurst(text, x, y, area = $('#blaster')) {
   const metrics = getBurstMetrics(text, area);
+  const lines = getBurstLines(text);
   const el = document.createElement('div');
   el.className = 'burst';
-  el.textContent = text;
   el.style.left = `${x}px`;
   el.style.top = `${y}px`;
   el.style.fontSize = `${metrics.fontSize}px`;
   el.style.maxWidth = `${metrics.maxWidth}px`;
-  el.style.whiteSpace = metrics.singleLine ? 'nowrap' : 'normal';
+  el.style.whiteSpace = 'nowrap';
   el.style.setProperty('--rot', `${(Math.random() * 12 - 6).toFixed(1)}deg`);
+
+  lines.forEach((line, index) => {
+    if (index) el.appendChild(document.createElement('br'));
+    el.appendChild(document.createTextNode(line));
+  });
+
   area.appendChild(el);
   setTimeout(() => el.remove(), 1000);
 }
@@ -240,8 +266,12 @@ function blast(e) {
 function renderChaosMode() {
   const btn = $('#chaosToggle');
   const capture = $('#chaosCaptureLayer');
+  const blastPageActive = $('.page[data-page="blast"]').classList.contains('active');
+  const active = chaosMode && blastPageActive;
+
   btn.classList.toggle('is-on', chaosMode);
-  capture.classList.toggle('is-on', chaosMode);
+  capture.classList.toggle('is-on', active);
+  document.body.classList.toggle('chaos-active', active);
   btn.setAttribute('aria-pressed', chaosMode ? 'true' : 'false');
   $('#chaosState').textContent = chaosMode ? 'ON' : 'OFF';
 }
@@ -348,7 +378,8 @@ function go(page) {
   if (page === 'stats') requestAnimationFrame(renderStats);
   if (page === 'phrases') renderPhrases();
 
-  window.scrollTo({ top: 0, behavior: 'instant' });
+  renderChaosMode();
+  window.scrollTo(0, 0);
 }
 
 $('#themeBtn').addEventListener('click', () => {
