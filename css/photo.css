@@ -1,0 +1,111 @@
+.blaster-photo-layer{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  display:none;
+  place-items:center;
+  overflow:hidden;
+  pointer-events:none;
+  background:color-mix(in srgb,var(--bg) 86%,#000);
+}
+
+.blaster.has-photo .blaster-photo-layer{
+  display:grid;
+}
+
+.blaster-photo{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center;
+  pointer-events:none;
+  will-change:transform;
+}
+
+.photo-tools{
+  position:absolute;
+  top:12px;
+  right:12px;
+  z-index:20;
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+
+.photo-tool{
+  min-height:38px;
+  padding:7px 11px;
+  border:1px solid color-mix(in srgb,var(--line) 86%,transparent);
+  border-radius:999px;
+  background:color-mix(in srgb,var(--surface) 86%,transparent);
+  color:var(--text);
+  box-shadow:0 8px 24px rgba(0,0,0,.14);
+  backdrop-filter:blur(12px);
+  font-size:12px;
+  font-weight:850;
+  white-space:nowrap;
+}
+
+.photo-tool:hover{
+  border-color:color-mix(in srgb,var(--accent) 56%,var(--line));
+}
+
+.photo-tool.remove{
+  color:var(--danger);
+}
+
+.blaster.has-photo::before{
+  opacity:.08;
+  z-index:3;
+}
+
+.blaster.has-photo .blaster-inner{
+  position:absolute;
+  inset:0;
+  z-index:4;
+  padding:0;
+  pointer-events:none;
+}
+
+.blaster.has-photo .tap-title,
+.blaster.has-photo .tap-note,
+.blaster.has-photo .tap-target{
+  visibility:hidden;
+  opacity:0;
+}
+
+.blaster.has-photo .counter{
+  position:absolute;
+  left:14px;
+  bottom:14px;
+  z-index:5;
+  margin:0;
+  background:color-mix(in srgb,var(--surface) 84%,transparent);
+  border:1px solid color-mix(in srgb,var(--line) 76%,transparent);
+  box-shadow:0 8px 26px rgba(0,0,0,.18);
+  backdrop-filter:blur(12px);
+}
+
+@media (max-width:760px){
+  .photo-tools{
+    top:10px;
+    right:10px;
+  }
+
+  .photo-tool{
+    min-height:36px;
+    padding:7px 10px;
+  }
+
+  .blaster.has-photo .counter{
+    left:10px;
+    bottom:10px;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .blaster-photo{
+    will-change:auto;
+  }
+}
