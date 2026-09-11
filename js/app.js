@@ -15,6 +15,8 @@ let state = loadState();
 let sessionCount = 0;
 let statRange = '7';
 let chaosMode = false;
+let photoObjectUrl = null;
+let photoImpactAnimation = null;
 
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
@@ -57,6 +59,111 @@ function renderHome() {
   $('#sessionCount').textContent = sessionCount;
   $('#activePhraseCount').textContent = activePhrases().length;
   $('#todayCount').textContent = getTodayCount(state);
+}
+
+function renderPhotoMode() {
+  const active = !!photoObjectUrl;
+  $('#blaster').classList.toggle('has-photo', active);
+  $('#blasterPhotoLayer').setAttribute('aria-hidden', active ? 'false' : 'true');
+  $('#photoPickerBtn').textContent = active ? '換照片' : '加入照片';
+  $('#removePhotoBtn').hidden = !active;
+}
+
+function clearPhoto() {
+  if (photoImpactAnimation) {
+    photoImpactAnimation.cancel();
+    photoImpactAnimation = null;
+  }
+
+  if (photoObjectUrl) {
+    URL.revokeObjectURL(photoObjectUrl);
+    photoObjectUrl = null;
+  }
+
+  $('#blasterPhoto').removeAttribute('src');
+  $('#photoFileInput').value = '';
+  renderPhotoMode();
+}
+
+function setPhotoFile(file) {
+  if (!file || !file.type.startsWith('image/')) {
+    alert('請選擇圖片檔案。');
+    return;
+  }
+
+  if (photoObjectUrl) {
+    URL.revokeObjectURL(photoObjectUrl);
+  }
+
+  photoObjectUrl = URL.createObjectURL(file);
+
+  const img = $('#blasterPhoto');
+  img.onload = () => renderPhotoMode();
+  img.onerror = () => {
+    clearPhoto();
+    alert('圖片載入失敗，請換一張再試。');
+  };
+  img.src = photoObjectUrl;
+  renderPhotoMode();
+}
+
+function getRenderedPhotoRect() {
+  const img = $('#blasterPhoto');
+  const layer = $('#blasterPhotoLayer');
+
+  if (!photoObjectUrl || !img.naturalWidth || !img.naturalHeight) return null;
+
+  const rect = layer.getBoundingClientRect();
+  const scale = Math.min(
+    rect.width / img.naturalWidth,
+    rect.height / img.naturalHeight
+  );
+  const width = img.naturalWidth * scale;
+  const height = img.naturalHeight * scale;
+
+  return {
+    left: rect.left + (rect.width - width) / 2,
+    top: rect.top + (rect.height - height) / 2,
+    right: rect.left + (rect.width + width) / 2,
+    bottom: rect.top + (rect.height + height) / 2
+  };
+}
+
+function pointHitsPhoto(clientX, clientY) {
+  const rect = getRenderedPhotoRect();
+  if (!rect) return false;
+
+  return clientX >= rect.left &&
+    clientX <= rect.right &&
+    clientY >= rect.top &&
+    clientY <= rect.bottom;
+}
+
+function triggerPhotoImpact(clientX, clientY) {
+  if (!pointHitsPhoto(clientX, clientY)) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const img = $('#blasterPhoto');
+  const rect = img.getBoundingClientRect();
+  const originX = Math.max(0, Math.min(rect.width, clientX - rect.left));
+  const originY = Math.max(0, Math.min(rect.height, clientY - rect.top));
+
+  img.style.transformOrigin = `${originX}px ${originY}px`;
+
+  if (photoImpactAnimation) photoImpactAnimation.cancel();
+  photoImpactAnimation = img.animate([
+    { transform: 'scale(1)' },
+    { transform: 'scale(1.055)', offset: .42 },
+    { transform: 'scale(.995)', offset: .76 },
+    { transform: 'scale(1)' }
+  ], {
+    duration: 190,
+    easing: 'cubic-bezier(.2,.85,.25,1)'
+  });
+
+  photoImpactAnimation.onfinish = () => {
+    photoImpactAnimation = null;
+  };
 }
 
 function renderPhrases() {
@@ -282,6 +389,8 @@ function blast(e) {
   let x = e.clientX - rect.left;
   let y = e.clientY - rect.top;
 
+  triggerPhotoImpact(e.clientX, e.clientY);
+
   if (!Number.isFinite(x) || !Number.isFinite(y)) {
     x = rect.width / 2;
     y = rect.height / 2;
@@ -307,6 +416,7 @@ function renderChaosMode() {
 
 function handleChaosPointer(e) {
   if (!chaosMode) return;
+  triggerPhotoImpact(e.clientX, e.clientY);
   fireCurseAt(e.clientX, e.clientY, $('#pageBurstLayer'));
 }
 
@@ -427,6 +537,15 @@ $('#topicInput').addEventListener('keydown', e => {
 });
 
 $('#blaster').addEventListener('pointerdown', blast);
+$('#photoTools').addEventListener('pointerdown', e => e.stopPropagation());
+$('#photoPickerBtn').addEventListener('click', () => $('#photoFileInput').click());
+$('#removePhotoBtn').addEventListener('click', clearPhoto);
+$('#photoFileInput').addEventListener('change', e => {
+  const file = e.target.files?.[0];
+  if (file) setPhotoFile(file);
+  e.target.value = '';
+});
+
 $('#chaosToggle').addEventListener('click', () => {
   chaosMode = !chaosMode;
   renderChaosMode();
@@ -501,8 +620,13 @@ window.addEventListener('resize', () => {
   }, 120);
 });
 
+window.addEventListener('beforeunload', () => {
+  if (photoObjectUrl) URL.revokeObjectURL(photoObjectUrl);
+});
+
 applyTheme();
 renderHome();
+renderPhotoMode();
 renderPhrases();
 renderStats();
 renderChaosMode();
