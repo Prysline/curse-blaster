@@ -20,6 +20,7 @@
   </script>
   <link rel="stylesheet" href="./css/style.css" />
   <link rel="stylesheet" href="./css/chaos.css" />
+  <link rel="stylesheet" href="./css/photo.css" />
 </head>
 <body>
 <div class="app">
@@ -47,6 +48,14 @@
           </article>
 
           <article class="card blaster" id="blaster" aria-label="點擊這裡發射咒罵">
+            <div class="blaster-photo-layer" id="blasterPhotoLayer" aria-hidden="true">
+              <img class="blaster-photo" id="blasterPhoto" alt="" />
+            </div>
+            <div class="photo-tools" id="photoTools">
+              <button class="photo-tool" id="photoPickerBtn" type="button">加入照片</button>
+              <button class="photo-tool remove" id="removePhotoBtn" type="button" hidden>移除照片</button>
+              <input id="photoFileInput" type="file" accept="image/*" hidden />
+            </div>
             <div class="blaster-inner">
               <div class="tap-title">點一下。</div>
               <div class="tap-note">你知道你想罵</div>
